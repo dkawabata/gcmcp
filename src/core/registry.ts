@@ -1,12 +1,11 @@
 import fs from 'fs-extra'
 import os from 'node:os'
 import path from 'node:path'
-import type { McpServer } from './validate'
 
 export type RegistryItem = {
   id: string
   label?: string
-  server: McpServer
+  server: unknown
 }
 
 export function getRegistryDir(): string {
@@ -23,7 +22,7 @@ export async function listRegistry(): Promise<RegistryItem[]> {
     const id = file.replace(/\.json$/, '')
     try {
       const raw = await fs.readFile(path.join(dir, file), 'utf8')
-      const server = JSON.parse(raw) as McpServer
+      const server = JSON.parse(raw) as unknown
       out.push({ id, server })
     } catch {
       // ignore broken file

@@ -3,7 +3,6 @@ import { backupSettings, readSettings, writeSettings, getSettingsPath } from '..
 import { buildNextSettings, type ApplyMode } from '../core/apply'
 import { promptToggle } from '../ui/prompt'
 import { readDisabled, writeDisabled, getDisabledPathFor } from '../core/disabled'
-import type { McpServer } from '../core/validate'
 
 export async function toggleCommand(opts: { mode?: ApplyMode; dryRun?: boolean }) {
   const mode: ApplyMode = (opts.mode as ApplyMode) ?? 'compose'
@@ -27,8 +26,8 @@ export async function toggleCommand(opts: { mode?: ApplyMode; dryRun?: boolean }
     choices: unionIds.map((id) => ({ name: id, value: id, checked: id in current })),
   })
 
-  let finalEnabled: Record<string, McpServer> = {}
-  const finalDisabled: Record<string, McpServer> = { ...disabled }
+  let finalEnabled: Record<string, unknown> = {}
+  const finalDisabled: Record<string, unknown> = { ...disabled }
 
   if (mode === 'compose') {
     // Only selected IDs remain enabled; others move to disabled

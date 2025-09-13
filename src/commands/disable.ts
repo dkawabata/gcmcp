@@ -1,7 +1,6 @@
 import chalk from 'chalk'
 import { backupSettings, readSettings, writeSettings, getSettingsPath } from '../core/config'
 import { readDisabled, writeDisabled, getDisabledPathFor } from '../core/disabled'
-import type { McpServer } from '../core/validate'
 
 export async function disableCommand(id: string, opts: { dryRun?: boolean }) {
   const settingsPath = getSettingsPath()
@@ -21,7 +20,7 @@ export async function disableCommand(id: string, opts: { dryRun?: boolean }) {
     return
   }
 
-  const server: McpServer = current[id]
+  const server = current[id]
   const next = { ...current }
   delete next[id]
   const nextDisabled = { ...disabled, [id]: server }

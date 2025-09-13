@@ -1,9 +1,8 @@
 import fs from 'fs-extra'
 import path from 'node:path'
 import { getSettingsPath } from './config'
-import type { McpServer } from './validate'
 
-export type DisabledMap = Record<string, McpServer>
+export type DisabledMap = Record<string, unknown>
 
 export function getDisabledPathFor(settingsPath: string): string {
   return `${settingsPath}.disabled.json`

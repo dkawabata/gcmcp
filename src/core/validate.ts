@@ -19,15 +19,23 @@ export const WsServer = z.object({
   headers: z.record(z.string()).optional(),
 })
 
-export const McpServer = z.union([StdioServer, SseServer, WsServer])
+// Fallback: allow unknown/custom transports to pass-through
+export const GenericServer = z
+  .object({ transport: z.string() })
+  .catchall(z.any())
 
-export const GeminiSettingsSchema = z.object({
-  mcpServers: z.record(McpServer).default({}),
-}).strip().catchall(z.any())
+export const McpServer = z.union([StdioServer, SseServer, WsServer, GenericServer])
+
+export const GeminiSettingsSchema = z
+  .object({
+    // Accept any shape per server; tool acts as pass-through
+    mcpServers: z.record(z.unknown()).default({}),
+  })
+  .strip()
+  .catchall(z.unknown())
 
 export type McpServer = z.infer<typeof McpServer>
 
 export function validateSettings(input: unknown) {
   return GeminiSettingsSchema.parse(input)
 }
-
