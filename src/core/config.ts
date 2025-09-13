@@ -1,0 +1,47 @@
+import fs from 'fs-extra'
+import os from 'node:os'
+import path from 'node:path'
+import type { McpServer } from './validate'
+import { validateSettings } from './validate'
+
+export const DEFAULT_SETTINGS_PATH = path.join(os.homedir(), '.gemini', 'settings.json')
+export const SETTINGS_ENV = 'GEMINI_SETTINGS_PATH'
+
+export type GeminiSettings = {
+  mcpServers?: Record<string, McpServer>
+  [k: string]: unknown
+}
+
+export function getSettingsPath(): string {
+  const override = process.env[SETTINGS_ENV]
+  return override && override.trim().length > 0 ? override : DEFAULT_SETTINGS_PATH
+}
+
+export async function readSettings(filePath = getSettingsPath()): Promise<GeminiSettings> {
+  if (!(await fs.pathExists(filePath))) return { mcpServers: {} }
+  const raw = await fs.readFile(filePath, 'utf8')
+  try {
+    const json = JSON.parse(raw) as unknown
+    const parsed = validateSettings(json)
+    return parsed as GeminiSettings
+  } catch {
+    throw new Error(`Failed to parse JSON settings file: ${filePath}`)
+  }
+}
+
+export async function ensureDirFor(filePath: string) {
+  await fs.ensureDir(path.dirname(filePath))
+}
+
+export async function backupSettings(filePath = getSettingsPath()): Promise<string | null> {
+  if (!(await fs.pathExists(filePath))) return null
+  const backupPath = `${filePath}.gcmcp.bak`
+  await fs.copy(filePath, backupPath)
+  return backupPath
+}
+
+export async function writeSettings(settings: GeminiSettings, filePath = getSettingsPath()) {
+  await ensureDirFor(filePath)
+  const text = JSON.stringify(settings, null, 2)
+  await fs.writeFile(filePath, text, 'utf8')
+}

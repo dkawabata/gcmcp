@@ -1,0 +1,7 @@
+# Copy this to .npmrc (DO NOT COMMIT your real token)
+# Use either a real token or an environment variable
+
+always-auth=true
+registry=https://registry.npmjs.org/
+//registry.npmjs.org/:_authToken=${NPM_TOKEN}
+
