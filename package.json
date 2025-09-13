@@ -1,6 +1,6 @@
 {
   "name": "gcmcp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Interactive MCP servers switcher for Gemini CLI (~/.gemini/settings.json)",
   "author": "dkawabata",
   "keywords": [
