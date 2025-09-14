@@ -26,5 +26,5 @@ export async function readDisabled(filePath = getDisabledPathFor(getSettingsPath
 
 export async function writeDisabled(map: DisabledMap, filePath = getDisabledPathFor(getSettingsPath())) {
   await ensureDirFor(filePath)
-  await fs.writeFile(filePath, JSON.stringify(map, null, 2), 'utf8')
+  await fs.writeFile(filePath, JSON.stringify(map, null, 2) + '\n', 'utf8')
 }

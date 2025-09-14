@@ -45,6 +45,6 @@ export async function backupSettings(filePath = getSettingsPath()): Promise<stri
 
 export async function writeSettings(settings: GeminiSettings, filePath = getSettingsPath()) {
   await ensureDirFor(filePath)
-  const text = JSON.stringify(settings, null, 2)
+  const text = JSON.stringify(settings, null, 2) + '\n'
   await fs.writeFile(filePath, text, 'utf8')
 }
